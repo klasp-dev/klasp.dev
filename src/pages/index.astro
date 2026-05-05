@@ -1,0 +1,186 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout>
+  <header class="nav">
+    <div class="container nav-row">
+      <a href="/" class="brand">klasp</a>
+      <ul class="nav-links">
+        <li><a href="https://github.com/klasp-dev/klasp">GitHub</a></li>
+        <li><a href="https://github.com/klasp-dev/klasp#readme">Docs</a></li>
+        <li><a href="https://github.com/klasp-dev/klasp/releases">Releases</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <span class="eyebrow"><span class="dot"></span>v0.2 — recipe slate landed</span>
+        <h1 class="h1">
+          Block AI coding agents on the <em>same quality gates</em> your humans hit.
+        </h1>
+        <p class="lede">
+          klasp turns <code>fmt</code>, <code>lint</code>, <code>type-check</code> and <code>test</code>
+          into hard agent boundaries. Drift, infinite loops, and broken PRs stop at the gate —
+          not in human review.
+        </p>
+        <div class="cta-row">
+          <span class="install-snippet">
+            <span class="prompt">$</span><span>npx klasp@latest init</span>
+          </span>
+          <a class="btn-ghost" href="https://github.com/klasp-dev/klasp">
+            View on GitHub →
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <p class="section-label">Why klasp</p>
+        <h2 class="section-title">One config. Same gates. Both audiences.</h2>
+        <div class="why-grid">
+          <article class="why-card">
+            <h3><span class="num">01</span> Stop bad PRs at the source</h3>
+            <p>
+              Agents can't merge what they can't pass. klasp wires your existing fmt /
+              lint / test commands into deterministic exit-code gates the agent has to
+              clear before it commits.
+            </p>
+          </article>
+          <article class="why-card">
+            <h3><span class="num">02</span> One config, both audiences</h3>
+            <p>
+              <code>klasp.toml</code> is the single source of truth. The same gate that
+              guards your pre-commit hook guards the agent loop — no second config to
+              drift out of sync.
+            </p>
+          </article>
+          <article class="why-card">
+            <h3><span class="num">03</span> Plug-in agent support</h3>
+            <p>
+              First-class for Claude Code and Codex CLI today. Managed
+              <code>CLAUDE.md</code> / <code>AGENTS.md</code> blocks installed
+              idempotently, with conflict detection and clean uninstall.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <p class="section-label">Recipes</p>
+        <h2 class="section-title">Typed recipes for the gates you already run.</h2>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="dots"><span></span><span></span><span></span></span>
+            <span class="file">klasp.toml</span>
+          </div>
+          <pre class="code-body"><span class="tok-comment"># fmt — wraps an existing pre-commit hook</span>
+<span class="tok-section">[[checks]]</span>
+<span class="tok-key">name</span>    = <span class="tok-str">"format"</span>
+<span class="tok-key">type</span>    = <span class="tok-str">"pre_commit"</span>
+<span class="tok-key">hook_id</span> = <span class="tok-str">"rustfmt"</span>
+
+<span class="tok-comment"># lint — fallow groups multiple checks under one verdict</span>
+<span class="tok-section">[[checks]]</span>
+<span class="tok-key">name</span> = <span class="tok-str">"lint"</span>
+<span class="tok-key">type</span> = <span class="tok-str">"fallow"</span>
+
+<span class="tok-comment"># test — pytest with JUnit-XML diagnostics surfaced to the agent</span>
+<span class="tok-section">[[checks]]</span>
+<span class="tok-key">name</span>      = <span class="tok-str">"test"</span>
+<span class="tok-key">type</span>      = <span class="tok-str">"pytest"</span>
+<span class="tok-key">junit_xml</span> = <span class="tok-bool">true</span>
+
+<span class="tok-comment"># build — cargo with structured compiler diagnostics</span>
+<span class="tok-section">[[checks]]</span>
+<span class="tok-key">name</span>       = <span class="tok-str">"build"</span>
+<span class="tok-key">type</span>       = <span class="tok-str">"cargo"</span>
+<span class="tok-key">subcommand</span> = <span class="tok-str">"check"</span>
+</pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <p class="section-label">Agents</p>
+        <h2 class="section-title">First-class support for the agents you ship with.</h2>
+        <table class="matrix">
+          <thead>
+            <tr>
+              <th class="feature">Capability</th>
+              <th>Claude Code</th>
+              <th>Codex CLI</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="feature">Pre-commit gate hooks</td>
+              <td class="yes">✓</td>
+              <td class="yes">✓</td>
+            </tr>
+            <tr>
+              <td class="feature">Managed config block</td>
+              <td><code>CLAUDE.md</code></td>
+              <td><code>AGENTS.md</code></td>
+            </tr>
+            <tr>
+              <td class="feature">Idempotent install / uninstall</td>
+              <td class="yes">✓</td>
+              <td class="yes">✓</td>
+            </tr>
+            <tr>
+              <td class="feature">Conflict detection</td>
+              <td class="yes">✓</td>
+              <td class="yes">✓</td>
+            </tr>
+            <tr>
+              <td class="feature">Cursor / Aider</td>
+              <td class="pending">— roadmap</td>
+              <td class="pending">— roadmap</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <p class="section-label">Install</p>
+        <h2 class="section-title">Pick your package manager.</h2>
+        <div class="install-grid">
+          <div class="install-card">
+            <h4>npm / pnpm / bun</h4>
+            <pre><span class="prompt">$ </span>npx klasp@latest init</pre>
+          </div>
+          <div class="install-card">
+            <h4>pipx (python)</h4>
+            <pre><span class="prompt">$ </span>pipx install klasp
+<span class="prompt">$ </span>klasp init</pre>
+          </div>
+          <div class="install-card">
+            <h4>cargo (rust)</h4>
+            <pre><span class="prompt">$ </span>cargo install klasp
+<span class="prompt">$ </span>klasp init</pre>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-row">
+      <span>klasp · v0.2 · MIT</span>
+      <ul class="footer-links">
+        <li><a href="https://github.com/klasp-dev/klasp">GitHub</a></li>
+        <li><a href="https://github.com/klasp-dev/klasp/issues">Issues</a></li>
+        <li><a href="https://github.com/klasp-dev/klasp/blob/main/LICENSE">License</a></li>
+      </ul>
+    </div>
+  </footer>
+</Layout>
