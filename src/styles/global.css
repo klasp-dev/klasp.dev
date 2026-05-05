@@ -243,6 +243,137 @@ pre,
   max-width: 28ch;
 }
 
+/* ── overnight use-case ───────────────────────────────── */
+.usecase-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-bottom: 36px;
+}
+
+.term {
+  background: var(--bg-code);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.7;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.term-bad { border-color: rgba(255, 107, 107, 0.35); }
+.term-good { border-color: var(--accent-line); }
+
+.term-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 16px;
+  background: var(--bg-elevated);
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.term-header .label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+}
+
+.term-bad .term-header .label { color: var(--red); }
+.term-good .term-header .label { color: var(--accent); }
+
+.term-header .label::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.term-bad .term-header .label::before { background: var(--red); }
+.term-good .term-header .label::before {
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent);
+}
+
+.term-header .pid {
+  color: var(--text-dim);
+  font-size: 11px;
+}
+
+.term-body {
+  padding: 16px 18px 20px;
+  flex: 1;
+}
+
+.log {
+  display: grid;
+  grid-template-columns: 56px 18px 1fr;
+  gap: 12px;
+  align-items: baseline;
+  padding: 4px 0;
+}
+
+.log .t { color: var(--text-dim); font-variant-numeric: tabular-nums; }
+.log .ic-fail { color: var(--red); }
+.log .ic-ok { color: var(--accent); }
+.log .ic-warn { color: var(--accent); }
+.log .ic-arrow { color: var(--text-dim); }
+.log .msg { color: var(--text-muted); }
+.log .msg strong { color: var(--text); font-weight: 600; }
+.log .msg .gate { color: var(--accent); }
+.log .msg .err { color: var(--red); }
+
+.log.epic { padding-top: 12px; }
+.log.epic .t { color: var(--text-muted); }
+.log.epic .msg strong { color: var(--text); }
+
+.term-bad .log.epic .msg strong { color: var(--red); }
+.term-good .log.epic .msg strong { color: var(--accent); }
+
+.term-divider {
+  border: none;
+  border-top: 1px dashed var(--border-strong);
+  margin: 10px 0 6px;
+}
+
+.usecase-why {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  margin-top: 16px;
+}
+
+.usecase-why .item h4 {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.usecase-why .item p {
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+@media (max-width: 760px) {
+  .usecase-grid { grid-template-columns: 1fr; }
+  .log { grid-template-columns: 50px 16px 1fr; gap: 10px; }
+  .term-body { padding: 14px 14px 18px; font-size: 12.5px; }
+}
+
 /* ── why grid ─────────────────────────────────────────── */
 .why-grid {
   display: grid;

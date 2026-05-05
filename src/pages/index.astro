@@ -39,6 +39,79 @@ import Layout from "../layouts/Layout.astro";
 
     <section class="section">
       <div class="container">
+        <p class="section-label">Use case · overnight autonomy</p>
+        <h2 class="section-title">Ship while you sleep. Wake up to PRs, not panic.</h2>
+        <p class="lede" style="margin-bottom: 32px;">
+          Autonomous agents need a deterministic <em>done</em> signal. Without one, an
+          overnight run drifts: retry loops, exhausted context, force-pushed-broken
+          commits. klasp <em>is</em> that signal — every iteration ends in a clean
+          pass / fail with structured findings.
+        </p>
+
+        <div class="usecase-grid">
+          <article class="term term-bad" aria-label="Without klasp">
+            <div class="term-header">
+              <span class="label">Without klasp</span>
+              <span class="pid">overnight-run · pid 4471</span>
+            </div>
+            <div class="term-body">
+              <div class="log"><span class="t">23:42</span><span class="ic-arrow">▸</span><span class="msg">agent: implement <strong>checkout flow</strong></span></div>
+              <div class="log"><span class="t">00:15</span><span class="ic-fail">✗</span><span class="msg">tests fail · agent guesses, retries with different approach</span></div>
+              <div class="log"><span class="t">01:33</span><span class="ic-fail">✗</span><span class="msg">lint errors · agent rewrites unrelated module</span></div>
+              <div class="log"><span class="t">02:50</span><span class="ic-fail">✗</span><span class="msg">stuck in test/lint loop · context window exhausted</span></div>
+              <div class="log"><span class="t">04:12</span><span class="ic-fail">✗</span><span class="msg">agent gives up <span class="err">→ force-pushes broken code</span></span></div>
+              <hr class="term-divider" />
+              <div class="log epic"><span class="t">07:00</span><span class="ic-fail">⨯</span><span class="msg"><strong>main is red. 47 failed CI runs. 6h of compute burned.</strong></span></div>
+            </div>
+          </article>
+
+          <article class="term term-good" aria-label="With klasp">
+            <div class="term-header">
+              <span class="label">With klasp</span>
+              <span class="pid">overnight-run · pid 4472</span>
+            </div>
+            <div class="term-body">
+              <div class="log"><span class="t">23:42</span><span class="ic-arrow">▸</span><span class="msg">agent: implement <strong>checkout flow</strong></span></div>
+              <div class="log"><span class="t">23:58</span><span class="ic-warn">●</span><span class="msg"><span class="gate">klasp:format</span> ✗ → 3 lines · agent fixes</span></div>
+              <div class="log"><span class="t">00:14</span><span class="ic-ok">✓</span><span class="msg"><span class="gate">format · lint</span> · agent advances</span></div>
+              <div class="log"><span class="t">00:47</span><span class="ic-warn">●</span><span class="msg"><span class="gate">klasp:test</span> ✗ → <code>test_total::charges_tax</code> · agent investigates</span></div>
+              <div class="log"><span class="t">01:22</span><span class="ic-ok">✓</span><span class="msg"><span class="gate">all gates</span> · commit · open PR <strong>#142</strong></span></div>
+              <div class="log"><span class="t">01:25</span><span class="ic-arrow">▸</span><span class="msg">agent: implement <strong>refund handler</strong></span></div>
+              <hr class="term-divider" />
+              <div class="log epic"><span class="t">07:00</span><span class="ic-ok">✓</span><span class="msg"><strong>4 clean PRs in your queue. All green CI. Ready to review.</strong></span></div>
+            </div>
+          </article>
+        </div>
+
+        <div class="usecase-why">
+          <div class="item">
+            <h4>01 — deterministic done</h4>
+            <p>
+              Exit codes are unambiguous. Agents stop guessing whether they're finished —
+              the gate said zero, the gate said one. No drift, no panic loops.
+            </p>
+          </div>
+          <div class="item">
+            <h4>02 — structured findings</h4>
+            <p>
+              When a gate fails, klasp surfaces line-numbered diagnostics from
+              <code>cargo</code>, <code>pytest</code>, your linter — so the agent fixes
+              the actual error, not a hallucinated symptom.
+            </p>
+          </div>
+          <div class="item">
+            <h4>03 — bounded context</h4>
+            <p>
+              Tight pass / fail loops mean each iteration burns a few hundred tokens, not
+              tens of thousands. Overnight runs stay inside their context window.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
         <p class="section-label">Why klasp</p>
         <h2 class="section-title">One config. Same gates. Both audiences.</h2>
         <div class="why-grid">
