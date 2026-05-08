@@ -2,35 +2,38 @@
 import Layout from "../layouts/Layout.astro";
 ---
 
-<Layout>
+<Layout
+  title="klasp — block AI agents on the same gates as your humans"
+  description="klasp gates AI coding agents locally on your existing quality checks — before the agent's loop closes. v0.4.0: one-command setup with klasp setup."
+>
   <header class="nav">
     <div class="container nav-row">
       <a href="/" class="brand">klasp</a>
       <ul class="nav-links">
         <li><a href="https://github.com/klasp-dev/klasp">GitHub</a></li>
-        <li><a href="https://github.com/klasp-dev/klasp#readme">Docs</a></li>
+        <li><a href="https://github.com/klasp-dev/klasp/blob/main/docs/setup.md">Docs</a></li>
         <li><a href="https://github.com/klasp-dev/klasp/releases">Releases</a></li>
       </ul>
     </div>
   </header>
 
   <main>
+    <!-- ── 1. HERO ─────────────────────────────────────── -->
     <section class="hero">
       <div class="container">
-        <span class="eyebrow"><span class="dot"></span>v0.3 — three surfaces, one config</span>
+        <span class="eyebrow"><span class="dot"></span>v0.4.0 — setup + adopt</span>
         <h1 class="h1">
-          One <code>klasp.toml</code> — Claude Code, Codex, and Aider all hit the
-          <em>same quality gates</em>.
+          AI agents commit broken code.
+          <em>klasp stops them locally</em> — before the loop closes.
         </h1>
         <p class="lede">
-          klasp turns <code>fmt</code>, <code>lint</code>, <code>type-check</code> and <code>test</code>
-          into hard agent boundaries across every supported surface. Drift, infinite
-          loops, and broken PRs stop at the gate — not in human review. Extending to
-          new agents is a plugin protocol away.
+          klasp blocks AI coding agents on your existing quality gates — no rewrites, no
+          migration, just <code>klasp setup</code>.
         </p>
+        <p class="sub-lede">From <code>git init</code> to green doctor in one command.</p>
         <div class="cta-row">
           <span class="install-snippet">
-            <span class="prompt">$</span><span>npx @klasp-dev/klasp@latest init</span>
+            <span class="prompt">$</span><span>cargo install klasp &amp;&amp; klasp setup</span>
           </span>
           <a class="btn-ghost" href="https://github.com/klasp-dev/klasp">
             View on GitHub →
@@ -39,13 +42,111 @@ import Layout from "../layouts/Layout.astro";
       </div>
     </section>
 
+    <!-- ── 2. MINI-DEMO ───────────────────────────────── -->
+    <section class="section demo-section">
+      <div class="container">
+        <p class="section-label">Live demo</p>
+        <h2 class="section-title">Same agent. Same task. One difference.</h2>
+
+        <div class="demo-grid" id="demoGrid">
+          <!-- LEFT: without klasp -->
+          <div class="demo-panel demo-panel--bad">
+            <div class="demo-panel-header">
+              <span class="demo-panel-label demo-label--bad">without klasp</span>
+              <span class="demo-panel-pid">agent-session · pid 8821</span>
+            </div>
+            <div class="demo-panel-body" id="demoLeft"></div>
+          </div>
+
+          <!-- RIGHT: with klasp -->
+          <div class="demo-panel demo-panel--good">
+            <div class="demo-panel-header">
+              <span class="demo-panel-label demo-label--good">with klasp</span>
+              <span class="demo-panel-pid">agent-session · pid 8822</span>
+            </div>
+            <div class="demo-panel-body" id="demoRight"></div>
+          </div>
+        </div>
+
+        <div class="demo-controls">
+          <button class="btn-replay" id="replayBtn" type="button">Replay</button>
+          <span class="demo-hint">auto-loops every 32 s</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 3. BEFORE / AFTER SUMMARY ─────────────────── -->
+    <section class="section">
+      <div class="container">
+        <p class="section-label">At a glance</p>
+        <h2 class="section-title">What changes when you add klasp.</h2>
+        <div class="compare-table-wrap">
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th class="col-bad">Without klasp</th>
+                <th class="col-good">With klasp</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Agent commits broken code</td>
+                <td>klasp blocks the commit</td>
+              </tr>
+              <tr>
+                <td>CI fails 6 min later</td>
+                <td>Agent gets structured verdict in &lt;5 s</td>
+              </tr>
+              <tr>
+                <td>Human triages the failure</td>
+                <td>Agent self-corrects in the same loop</td>
+              </tr>
+              <tr>
+                <td>Quality gate is enforced <em>after</em> code lands</td>
+                <td>Quality gate is enforced <em>before</em> code lands</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 4. QUICK INSTALL ───────────────────────────── -->
+    <section class="section">
+      <div class="container">
+        <p class="section-label">Install</p>
+        <h2 class="section-title">Pick your package manager.</h2>
+        <div class="install-grid">
+          <div class="install-card">
+            <h4>cargo (rust)</h4>
+            <pre><span class="prompt">$ </span>cargo install klasp</pre>
+          </div>
+          <div class="install-card">
+            <h4>npm</h4>
+            <pre><span class="prompt">$ </span>npm i -g @klasp/cli</pre>
+          </div>
+          <div class="install-card">
+            <h4>pip (python)</h4>
+            <pre><span class="prompt">$ </span>pip install klasp</pre>
+          </div>
+        </div>
+        <div class="setup-callout">
+          <span class="setup-callout-label">then</span>
+          <span class="install-snippet install-snippet--lg">
+            <span class="prompt">$</span><span>klasp setup</span>
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- existing sections preserved below ──────────────── -->
     <section class="section">
       <div class="container">
         <p class="section-label">Use case · overnight autonomy</p>
         <h2 class="section-title">Ship while you sleep. Wake up to PRs, not panic.</h2>
         <p class="lede" style="margin-bottom: 32px;">
           Autonomous agents need a deterministic <em>done</em> signal. Without one, an
-          overnight run drifts: retry loops, exhausted context, force-pushed-broken
+          overnight run drifts: retry loops, exhausted context, force-pushed broken
           commits. klasp <em>is</em> that signal — every iteration ends in a clean
           pass / fail with structured findings.
         </p>
@@ -252,39 +353,114 @@ import Layout from "../layouts/Layout.astro";
         </p>
       </div>
     </section>
-
-    <section class="section">
-      <div class="container">
-        <p class="section-label">Install</p>
-        <h2 class="section-title">Pick your package manager.</h2>
-        <div class="install-grid">
-          <div class="install-card">
-            <h4>npm / pnpm / bun</h4>
-            <pre><span class="prompt">$ </span>npx @klasp-dev/klasp@latest init</pre>
-          </div>
-          <div class="install-card">
-            <h4>pipx (python)</h4>
-            <pre><span class="prompt">$ </span>pipx install klasp
-<span class="prompt">$ </span>klasp init</pre>
-          </div>
-          <div class="install-card">
-            <h4>cargo (rust)</h4>
-            <pre><span class="prompt">$ </span>cargo install klasp
-<span class="prompt">$ </span>klasp init</pre>
-          </div>
-        </div>
-      </div>
-    </section>
   </main>
 
+  <!-- ── 5. FOOTER ─────────────────────────────────────── -->
   <footer class="footer">
     <div class="container footer-row">
-      <span>klasp · v0.3.1 · Apache-2.0</span>
+      <span>klasp · v0.4.0 · Apache-2.0</span>
       <ul class="footer-links">
         <li><a href="https://github.com/klasp-dev/klasp">GitHub</a></li>
+        <li><a href="https://github.com/klasp-dev/klasp/blob/main/docs/setup.md">Docs</a></li>
+        <li><a href="https://github.com/klasp-dev/klasp/releases/tag/v0.4.0">v0.4.0 release</a></li>
         <li><a href="https://github.com/klasp-dev/klasp/issues">Issues</a></li>
         <li><a href="https://github.com/klasp-dev/klasp/blob/main/LICENSE">License</a></li>
       </ul>
     </div>
   </footer>
 </Layout>
+
+<script>
+// ── Mini-demo animation ──────────────────────────────────────────
+// All timing in milliseconds.
+// FRAME = one "typed line" appearance.  Lines are pre-built HTML strings —
+// no character-by-character typing to keep the JS under 150 lines.
+
+const LOOP_DELAY = 32_000; // ms before auto-restart
+
+type Frame = { html: string; delay: number };
+
+const leftFrames: Frame[] = [
+  { html: line("dim", "$ ", "txt", "pnpm test"), delay: 200 },
+  { html: line("dim", "…", "txt", "running 14 test suites"), delay: 1400 },
+  { html: line("dim", "$ ", "txt", "git add -A &amp;&amp; git commit -m \"fix: checkout\""), delay: 2600 },
+  { html: line("dim", "[main 3e1a7c2]", "txt", "fix: checkout"), delay: 3400 },
+  { html: line("dim", "$ ", "txt", "git push"), delay: 4200 },
+  { html: spacer(), delay: 5000 },
+  { html: line("dim", "06:00", "txt-muted", "…agent loop closed. move to next task"), delay: 6200 },
+  { html: spacer(), delay: 7000 },
+  { html: line("dim", "06:06", "fail", "GitHub Actions: 3 checks failed"), delay: 8400 },
+  { html: line("fail-indent", "", "fail", "tsc: Cannot find module 'lodash'"), delay: 9000 },
+  { html: line("fail-indent", "", "fail", "jest: 2 snapshots obsolete"), delay: 9600 },
+  { html: spacer(), delay: 10400 },
+  { html: line("dim", "06:08", "txt-muted", "human triages failure…"), delay: 11600 },
+  { html: line("dim", "06:23", "fail", "hotfix commit pushed. 17 min of human time."), delay: 13200 },
+];
+
+const rightFrames: Frame[] = [
+  { html: line("dim", "$ ", "txt", "pnpm test"), delay: 200 },
+  { html: line("dim", "…", "txt", "running 14 test suites"), delay: 1400 },
+  { html: line("dim", "$ ", "txt", "git add -A &amp;&amp; git commit -m \"fix: checkout\""), delay: 2600 },
+  { html: spacer(), delay: 3000 },
+  { html: line("gate-label", "klasp", "gate-running", "running gates…"), delay: 3200 },
+  { html: line("gate-label", "klasp", "gate-fail", "FAIL  tsc · missing import"), delay: 4100 },
+  { html: line("fail-indent", "", "fail", "src/lib/foo.ts:3 — Cannot find module 'lodash'"), delay: 4700 },
+  { html: spacer(), delay: 5200 },
+  { html: line("dim", "…", "txt-muted", "agent reads verdict. fixes import in same loop."), delay: 5600 },
+  { html: spacer(), delay: 6600 },
+  { html: line("dim", "$ ", "txt", "git add src/lib/foo.ts &amp;&amp; git commit -m \"fix: checkout\""), delay: 7000 },
+  { html: spacer(), delay: 7400 },
+  { html: line("gate-label", "klasp", "gate-running", "running gates…"), delay: 7600 },
+  { html: line("gate-label", "klasp", "gate-ok", "PASS  tsc"), delay: 8500 },
+  { html: line("gate-label", "klasp", "gate-ok", "PASS  jest"), delay: 9000 },
+  { html: line("gate-label", "klasp", "gate-ok", "PASS  eslint"), delay: 9500 },
+  { html: spacer(), delay: 10100 },
+  { html: line("dim", "[main 9fa12b0]", "ok", "fix: checkout — committed clean"), delay: 10900 },
+  { html: line("dim", "…", "ok", "agent loop closes. no human needed."), delay: 12300 },
+];
+
+function line(
+  promptCls: string,
+  promptTxt: string,
+  msgCls: string,
+  msgTxt: string,
+): string {
+  return `<div class="dline"><span class="dline-prompt ${promptCls}">${promptTxt}</span><span class="dline-msg ${msgCls}">${msgTxt}</span></div>`;
+}
+
+function spacer(): string {
+  return `<div class="dline dline-spacer"></div>`;
+}
+
+let timers: ReturnType<typeof setTimeout>[] = [];
+
+function clearTimers() {
+  timers.forEach(clearTimeout);
+  timers = [];
+}
+
+function run() {
+  clearTimers();
+  const left = document.getElementById("demoLeft");
+  const right = document.getElementById("demoRight");
+  if (!left || !right) return;
+  left.innerHTML = "";
+  right.innerHTML = "";
+
+  leftFrames.forEach(({ html, delay }) => {
+    timers.push(setTimeout(() => { left.insertAdjacentHTML("beforeend", html); }, delay));
+  });
+
+  rightFrames.forEach(({ html, delay }) => {
+    timers.push(setTimeout(() => { right.insertAdjacentHTML("beforeend", html); }, delay));
+  });
+
+  // auto loop
+  timers.push(setTimeout(run, LOOP_DELAY));
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  run();
+  document.getElementById("replayBtn")?.addEventListener("click", run);
+});
+</script>
