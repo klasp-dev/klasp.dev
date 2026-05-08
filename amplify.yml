@@ -5,6 +5,7 @@ frontend:
       commands:
         - nvm install 22 && nvm use 22
         - node --version
+        - rm -rf node_modules
         - corepack enable
         - corepack prepare pnpm@latest --activate
         - pnpm install --frozen-lockfile
@@ -17,5 +18,4 @@ frontend:
       - "**/*"
   cache:
     paths:
-      - node_modules/**/*
       - .pnpm-store/**/*
