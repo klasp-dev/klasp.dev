@@ -70,7 +70,7 @@ import Layout from "../layouts/Layout.astro";
 
         <div class="demo-controls">
           <button class="btn-replay" id="replayBtn" type="button">Replay</button>
-          <span class="demo-hint">auto-loops every 32 s</span>
+          <span class="demo-hint">auto-loops every 36 s</span>
         </div>
       </div>
     </section>
@@ -94,16 +94,20 @@ import Layout from "../layouts/Layout.astro";
                 <td>klasp blocks the commit</td>
               </tr>
               <tr>
-                <td>CI fails 6 min later</td>
-                <td>Agent gets structured verdict in &lt;5 s</td>
+                <td>CI fails 6 min after the agent loop already closed</td>
+                <td>Agent gets structured verdict in &lt;5 s, in the same loop</td>
               </tr>
               <tr>
-                <td>Human triages the failure</td>
-                <td>Agent self-corrects in the same loop</td>
+                <td>Agent retries blindly: force-push, fail, retry, fail. PR rots.</td>
+                <td>Agent reads the verdict, fixes once, ships clean</td>
               </tr>
               <tr>
-                <td>Quality gate is enforced <em>after</em> code lands</td>
-                <td>Quality gate is enforced <em>before</em> code lands</td>
+                <td>Human eventually breaks the retry loop</td>
+                <td>Agent moves to the next ticket — autonomous</td>
+              </tr>
+              <tr>
+                <td>Quality gate enforced <em>after</em> code lands</td>
+                <td>Quality gate enforced <em>before</em> code lands</td>
               </tr>
             </tbody>
           </table>
@@ -376,47 +380,73 @@ import Layout from "../layouts/Layout.astro";
 // FRAME = one "typed line" appearance.  Lines are pre-built HTML strings —
 // no character-by-character typing to keep the JS under 150 lines.
 
-const LOOP_DELAY = 32_000; // ms before auto-restart
+const LOOP_DELAY = 36_000; // ms before auto-restart
 
 type Frame = { html: string; delay: number };
 
+// LEFT — without klasp.
+// Agent commits broken code, CI fails, agent retries blindly, fails again,
+// retries again, fails again — wedged retry loop, no learning, no human.
+// This is what happens when the only feedback signal is post-merge CI.
 const leftFrames: Frame[] = [
   { html: line("dim", "$ ", "txt", "pnpm test"), delay: 200 },
-  { html: line("dim", "…", "txt", "running 14 test suites"), delay: 1400 },
-  { html: line("dim", "$ ", "txt", "git add -A &amp;&amp; git commit -m \"fix: checkout\""), delay: 2600 },
-  { html: line("dim", "[main 3e1a7c2]", "txt", "fix: checkout"), delay: 3400 },
-  { html: line("dim", "$ ", "txt", "git push"), delay: 4200 },
-  { html: spacer(), delay: 5000 },
-  { html: line("dim", "06:00", "txt-muted", "…agent loop closed. move to next task"), delay: 6200 },
-  { html: spacer(), delay: 7000 },
-  { html: line("dim", "06:06", "fail", "GitHub Actions: 3 checks failed"), delay: 8400 },
-  { html: line("fail-indent", "", "fail", "tsc: Cannot find module 'lodash'"), delay: 9000 },
-  { html: line("fail-indent", "", "fail", "jest: 2 snapshots obsolete"), delay: 9600 },
-  { html: spacer(), delay: 10400 },
-  { html: line("dim", "06:08", "txt-muted", "human triages failure…"), delay: 11600 },
-  { html: line("dim", "06:23", "fail", "hotfix commit pushed. 17 min of human time."), delay: 13200 },
+  { html: line("dim", "…", "txt", "14 suites pass"), delay: 1400 },
+  { html: line("dim", "$ ", "txt", "git commit -m \"fix: checkout\""), delay: 2400 },
+  { html: line("dim", "$ ", "txt", "git push"), delay: 3200 },
+  { html: spacer(), delay: 4000 },
+  { html: line("dim", "06:00", "txt-muted", "…loop closes. agent picks next task"), delay: 5200 },
+  { html: spacer(), delay: 6200 },
+  { html: line("dim", "06:06", "fail", "GitHub Actions: 3 checks failed"), delay: 7600 },
+  { html: line("fail-indent", "", "fail", "tsc: Cannot find module 'lodash'"), delay: 8200 },
+  { html: line("fail-indent", "", "fail", "jest: 2 snapshots obsolete"), delay: 8800 },
+  { html: spacer(), delay: 9600 },
+  { html: line("dim", "06:09", "txt-muted", "agent re-opens PR. regenerates patch."), delay: 10800 },
+  { html: line("dim", "$ ", "txt", "git push --force-with-lease"), delay: 12000 },
+  { html: spacer(), delay: 12800 },
+  { html: line("dim", "06:17", "fail", "GitHub Actions: 4 checks failed"), delay: 13800 },
+  { html: line("fail-indent", "", "fail", "tsc: still missing 'lodash'"), delay: 14400 },
+  { html: line("fail-indent", "", "fail", "eslint: 'foo' redeclared"), delay: 15000 },
+  { html: spacer(), delay: 15800 },
+  { html: line("dim", "06:21", "txt-muted", "agent retries again. push #3."), delay: 16800 },
+  { html: line("dim", "06:28", "fail", "GitHub Actions: 5 checks failed"), delay: 18200 },
+  { html: spacer(), delay: 19000 },
+  { html: line("dim", "⚠", "fail", "retry loop wedged. CI minutes burning."), delay: 20200 },
+  { html: line("dim", "⚠", "fail", "PR rotting. someone has to break the loop."), delay: 21400 },
 ];
 
+// RIGHT — with klasp.
+// Same agent, same broken code. klasp gates locally; agent reads structured
+// verdict, fixes in the same loop, commits clean — then keeps going.
+// The wedge: the agent is *productive* instead of stuck.
 const rightFrames: Frame[] = [
   { html: line("dim", "$ ", "txt", "pnpm test"), delay: 200 },
-  { html: line("dim", "…", "txt", "running 14 test suites"), delay: 1400 },
-  { html: line("dim", "$ ", "txt", "git add -A &amp;&amp; git commit -m \"fix: checkout\""), delay: 2600 },
-  { html: spacer(), delay: 3000 },
-  { html: line("gate-label", "klasp", "gate-running", "running gates…"), delay: 3200 },
-  { html: line("gate-label", "klasp", "gate-fail", "FAIL  tsc · missing import"), delay: 4100 },
-  { html: line("fail-indent", "", "fail", "src/lib/foo.ts:3 — Cannot find module 'lodash'"), delay: 4700 },
-  { html: spacer(), delay: 5200 },
-  { html: line("dim", "…", "txt-muted", "agent reads verdict. fixes import in same loop."), delay: 5600 },
-  { html: spacer(), delay: 6600 },
-  { html: line("dim", "$ ", "txt", "git add src/lib/foo.ts &amp;&amp; git commit -m \"fix: checkout\""), delay: 7000 },
-  { html: spacer(), delay: 7400 },
-  { html: line("gate-label", "klasp", "gate-running", "running gates…"), delay: 7600 },
-  { html: line("gate-label", "klasp", "gate-ok", "PASS  tsc"), delay: 8500 },
-  { html: line("gate-label", "klasp", "gate-ok", "PASS  jest"), delay: 9000 },
-  { html: line("gate-label", "klasp", "gate-ok", "PASS  eslint"), delay: 9500 },
-  { html: spacer(), delay: 10100 },
-  { html: line("dim", "[main 9fa12b0]", "ok", "fix: checkout — committed clean"), delay: 10900 },
-  { html: line("dim", "…", "ok", "agent loop closes. no human needed."), delay: 12300 },
+  { html: line("dim", "…", "txt", "14 suites pass"), delay: 1400 },
+  { html: line("dim", "$ ", "txt", "git commit -m \"fix: checkout\""), delay: 2400 },
+  { html: spacer(), delay: 2800 },
+  { html: line("gate-label", "klasp", "gate-running", "running gates…"), delay: 3000 },
+  { html: line("gate-label", "klasp", "gate-fail", "FAIL  tsc · missing import"), delay: 3900 },
+  { html: line("fail-indent", "", "fail", "src/lib/foo.ts:3 — Cannot find module 'lodash'"), delay: 4500 },
+  { html: spacer(), delay: 5000 },
+  { html: line("dim", "…", "txt-muted", "agent reads verdict. fixes import in same loop."), delay: 5400 },
+  { html: spacer(), delay: 6300 },
+  { html: line("dim", "$ ", "txt", "git commit -m \"fix: checkout\""), delay: 6700 },
+  { html: spacer(), delay: 7000 },
+  { html: line("gate-label", "klasp", "gate-running", "running gates…"), delay: 7200 },
+  { html: line("gate-label", "klasp", "gate-ok", "PASS  tsc"), delay: 8100 },
+  { html: line("gate-label", "klasp", "gate-ok", "PASS  jest"), delay: 8600 },
+  { html: line("gate-label", "klasp", "gate-ok", "PASS  eslint"), delay: 9100 },
+  { html: spacer(), delay: 9700 },
+  { html: line("dim", "[main 9fa12b0]", "ok", "fix: checkout — committed clean"), delay: 10500 },
+  { html: spacer(), delay: 11400 },
+  { html: line("dim", "…", "txt-muted", "agent picks next ticket from queue"), delay: 12200 },
+  { html: line("dim", "$ ", "txt", "git checkout -b feat/inventory-cache"), delay: 13400 },
+  { html: line("dim", "$ ", "txt", "git commit -m \"feat: inventory cache\""), delay: 14600 },
+  { html: spacer(), delay: 15200 },
+  { html: line("gate-label", "klasp", "gate-ok", "PASS  tsc · jest · eslint"), delay: 15600 },
+  { html: line("dim", "[main 7d1f9a2]", "ok", "feat: inventory cache — committed clean"), delay: 16800 },
+  { html: spacer(), delay: 17800 },
+  { html: line("dim", "✓", "ok", "agent shipping continuously."), delay: 18800 },
+  { html: line("dim", "✓", "ok", "no human in the loop."), delay: 20000 },
 ];
 
 function line(
