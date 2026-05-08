@@ -508,6 +508,19 @@ pre,
   color: var(--text-dim);
 }
 
+.matrix-note {
+  margin-top: 16px;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.matrix-note a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 /* ── install grid ─────────────────────────────────────── */
 .install-grid {
   display: grid;

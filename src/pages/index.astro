@@ -17,14 +17,16 @@ import Layout from "../layouts/Layout.astro";
   <main>
     <section class="hero">
       <div class="container">
-        <span class="eyebrow"><span class="dot"></span>v0.2 — recipe slate landed</span>
+        <span class="eyebrow"><span class="dot"></span>v0.3 — three surfaces, one config</span>
         <h1 class="h1">
-          Block AI coding agents on the <em>same quality gates</em> your humans hit.
+          One <code>klasp.toml</code> — Claude Code, Codex, and Aider all hit the
+          <em>same quality gates</em>.
         </h1>
         <p class="lede">
           klasp turns <code>fmt</code>, <code>lint</code>, <code>type-check</code> and <code>test</code>
-          into hard agent boundaries. Drift, infinite loops, and broken PRs stop at the gate —
-          not in human review.
+          into hard agent boundaries across every supported surface. Drift, infinite
+          loops, and broken PRs stop at the gate — not in human review. Extending to
+          new agents is a plugin protocol away.
         </p>
         <div class="cta-row">
           <span class="install-snippet">
@@ -132,11 +134,13 @@ import Layout from "../layouts/Layout.astro";
             </p>
           </article>
           <article class="why-card">
-            <h3><span class="num">03</span> Plug-in agent support</h3>
+            <h3><span class="num">03</span> Three surfaces, plugin protocol for the rest</h3>
             <p>
-              First-class for Claude Code and Codex CLI today. Managed
-              <code>CLAUDE.md</code> / <code>AGENTS.md</code> blocks installed
-              idempotently, with conflict detection and clean uninstall.
+              First-class for Claude Code, Codex CLI, and Aider. Managed
+              <code>.claude/settings.json</code> / <code>AGENTS.md</code> /
+              <code>.aider.conf.yml</code> blocks installed idempotently, with
+              conflict detection and clean uninstall. New surfaces ship via the
+              v0 plugin protocol — fork the reference plugin and you're done.
             </p>
           </article>
         </div>
@@ -189,36 +193,63 @@ import Layout from "../layouts/Layout.astro";
               <th class="feature">Capability</th>
               <th>Claude Code</th>
               <th>Codex CLI</th>
+              <th>Aider</th>
+              <th>Cursor</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td class="feature">Pre-commit gate hooks</td>
+              <td class="feature">Pre-commit gate</td>
               <td class="yes">✓</td>
               <td class="yes">✓</td>
+              <td class="yes">✓</td>
+              <td class="pending">—</td>
             </tr>
             <tr>
-              <td class="feature">Managed config block</td>
-              <td><code>CLAUDE.md</code></td>
+              <td class="feature">Push gate</td>
+              <td class="yes">✓</td>
+              <td class="yes">✓</td>
+              <td class="pending">—</td>
+              <td class="pending">—</td>
+            </tr>
+            <tr>
+              <td class="feature">Managed config</td>
+              <td><code>.claude/settings.json</code></td>
               <td><code>AGENTS.md</code></td>
+              <td><code>.aider.conf.yml</code></td>
+              <td class="pending">—</td>
             </tr>
             <tr>
               <td class="feature">Idempotent install / uninstall</td>
               <td class="yes">✓</td>
               <td class="yes">✓</td>
+              <td class="yes">✓</td>
+              <td class="pending">—</td>
             </tr>
             <tr>
               <td class="feature">Conflict detection</td>
               <td class="yes">✓</td>
               <td class="yes">✓</td>
+              <td class="pending">—</td>
+              <td class="pending">—</td>
             </tr>
             <tr>
-              <td class="feature">Cursor / Aider</td>
-              <td class="pending">— roadmap</td>
-              <td class="pending">— roadmap</td>
+              <td class="feature">Captured-session test</td>
+              <td class="yes">✓</td>
+              <td class="yes">✓</td>
+              <td class="yes">✓</td>
+              <td class="pending">—</td>
             </tr>
           </tbody>
         </table>
+        <p class="matrix-note">
+          Cursor's hook surface is still beta as of Cursor 3.3 with open
+          correctness bugs — deferred to v0.3.x or v1.0. Need a different
+          agent? Ship a plugin: see the
+          <a href="https://github.com/klasp-dev/klasp/tree/main/examples/klasp-plugin-pre-commit">reference plugin</a>
+          and the
+          <a href="https://github.com/klasp-dev/klasp/blob/main/docs/plugin-protocol.md">v0 protocol spec</a>.
+        </p>
       </div>
     </section>
 
@@ -248,7 +279,7 @@ import Layout from "../layouts/Layout.astro";
 
   <footer class="footer">
     <div class="container footer-row">
-      <span>klasp · v0.2 · MIT</span>
+      <span>klasp · v0.3.1 · Apache-2.0</span>
       <ul class="footer-links">
         <li><a href="https://github.com/klasp-dev/klasp">GitHub</a></li>
         <li><a href="https://github.com/klasp-dev/klasp/issues">Issues</a></li>
