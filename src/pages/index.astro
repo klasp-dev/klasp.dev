@@ -4,7 +4,7 @@ import Layout from "../layouts/Layout.astro";
 
 <Layout
   title="klasp — block AI agents on the same gates as your humans"
-  description="klasp gates AI coding agents locally on your existing quality checks — before the agent's loop closes. v0.4.0: one-command setup with klasp setup."
+  description="klasp gates AI coding agents locally on your existing quality checks — before the agent's loop closes. v0.5.0: zero-setup klasp demo, hook-conflict detection, and a subprocess plugin protocol."
 >
   <header class="nav">
     <div class="container nav-row">
@@ -21,19 +21,25 @@ import Layout from "../layouts/Layout.astro";
     <!-- ── 1. HERO ─────────────────────────────────────── -->
     <section class="hero">
       <div class="container">
-        <span class="eyebrow"><span class="dot"></span>v0.4.0 — setup + adopt</span>
+        <a class="eyebrow" href="https://github.com/klasp-dev/klasp/releases/tag/v0.5.0"
+          ><span class="dot"></span>v0.5.0 — demo · conflict-aware · plugins</a
+        >
         <h1 class="h1">
           AI agents commit broken code.
           <em>klasp stops them locally</em> — before the loop closes.
         </h1>
         <p class="lede">
           klasp blocks AI coding agents on your existing quality gates — no rewrites, no
-          migration, just <code>klasp setup</code>.
+          migration. See it work in one command, no repo required.
         </p>
-        <p class="sub-lede">From <code>git init</code> to green doctor in one command.</p>
+        <p class="sub-lede">
+          <code>klasp demo</code> shows the whole story; <code>klasp setup</code> wires it into
+          your repo from <code>git init</code> to green doctor.
+        </p>
         <div class="cta-row">
-          <span class="install-snippet">
-            <span class="prompt">$</span><span>cargo install klasp &amp;&amp; klasp setup</span>
+          <span class="install-snippet" data-copy="cargo install klasp &amp;&amp; klasp demo">
+            <span class="prompt">$</span><span>cargo install klasp &amp;&amp; klasp demo</span>
+            <span class="copy-hint" aria-hidden="true">copy</span>
           </span>
           <a class="btn-ghost" href="https://github.com/klasp-dev/klasp">
             View on GitHub →
@@ -45,8 +51,12 @@ import Layout from "../layouts/Layout.astro";
     <!-- ── 2. MINI-DEMO ───────────────────────────────── -->
     <section class="section demo-section">
       <div class="container">
-        <p class="section-label">Live demo</p>
+        <p class="section-label">Live demo · <code>klasp demo</code></p>
         <h2 class="section-title">Same agent. Same task. One difference.</h2>
+        <p class="section-sub">
+          This is what <code>klasp demo</code> replays in your terminal — a deterministic,
+          pre-recorded gate session. No repo to enrol, nothing to configure.
+        </p>
 
         <div class="demo-grid" id="demoGrid">
           <!-- LEFT: without klasp -->
@@ -75,42 +85,55 @@ import Layout from "../layouts/Layout.astro";
       </div>
     </section>
 
-    <!-- ── 3. BEFORE / AFTER SUMMARY ─────────────────── -->
-    <section class="section">
+    <!-- ── 3. TRUST STRIP ─────────────────────────────── -->
+    <section class="section trust-section">
       <div class="container">
-        <p class="section-label">At a glance</p>
-        <h2 class="section-title">What changes when you add klasp.</h2>
-        <div class="compare-table-wrap">
-          <table class="compare-table">
-            <thead>
-              <tr>
-                <th class="col-bad">Without klasp</th>
-                <th class="col-good">With klasp</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Agent commits broken code</td>
-                <td>klasp blocks the commit</td>
-              </tr>
-              <tr>
-                <td>CI fails 6 min after the agent loop already closed</td>
-                <td>Agent gets structured verdict in &lt;5 s, in the same loop</td>
-              </tr>
-              <tr>
-                <td>Agent retries blindly: force-push, fail, retry, fail. PR rots.</td>
-                <td>Agent reads the verdict, fixes once, ships clean</td>
-              </tr>
-              <tr>
-                <td>Human eventually breaks the retry loop</td>
-                <td>Agent moves to the next ticket — autonomous</td>
-              </tr>
-              <tr>
-                <td>Quality gate enforced <em>after</em> code lands</td>
-                <td>Quality gate enforced <em>before</em> code lands</td>
-              </tr>
-            </tbody>
-          </table>
+        <p class="section-label">No surprises</p>
+        <h2 class="section-title">A gate you can trust on the commit path.</h2>
+        <div class="trust-grid">
+          <div class="trust-card">
+            <h4><span class="tick">✓</span> Fail-open by default</h4>
+            <p>
+              A parse error or version skew degrades to <em>allow</em>, with a notice on the
+              surface — klasp never silently wedges your commits.
+            </p>
+          </div>
+          <div class="trust-card">
+            <h4><span class="tick">✓</span> Won't clobber your hooks</h4>
+            <p>
+              v0.5.0 fingerprints husky, lefthook, and pre-commit and skips with a warning
+              instead of overwriting. <code>klasp init --adopt</code> mirrors what you already
+              run.
+            </p>
+          </div>
+          <div class="trust-card">
+            <h4><span class="tick">✓</span> klasp gates klasp</h4>
+            <p>
+              The repo blocks its own agents on <code>cargo check</code> / clippy / test via a
+              real
+              <a href="https://github.com/klasp-dev/klasp/blob/main/klasp.toml">klasp.toml</a> —
+              and so does this site.
+            </p>
+          </div>
+          <div class="trust-card">
+            <h4><span class="tick">✓</span> Proven, not promised</h4>
+            <p>
+              Every green cell in the agent matrix below is backed by a committed
+              captured-session test, not a marketing claim.
+            </p>
+          </div>
+          <div class="trust-card">
+            <h4><span class="tick">✓</span> Honest about pre-1.0</h4>
+            <p>
+              Config and plugin schemas are versioned and stabilise at v1.0; breaking changes
+              land only at minor boundaries, with migration notes. See the
+              <a href="https://github.com/klasp-dev/klasp/blob/main/SECURITY.md">security model</a>.
+            </p>
+          </div>
+          <div class="trust-card">
+            <h4><span class="tick">✓</span> Apache-2.0, one Rust binary</h4>
+            <p>cargo / npm / pip. No telemetry, no account, no server in the loop.</p>
+          </div>
         </div>
       </div>
     </section>
@@ -288,6 +311,83 @@ import Layout from "../layouts/Layout.astro";
       </div>
     </section>
 
+    <!-- ── BUILDER LANE ─────────────────────────────────── -->
+    <section class="section builder-section">
+      <div class="container">
+        <p class="section-label">For builders</p>
+        <h2 class="section-title">A machine contract, not just a hook.</h2>
+        <p class="section-sub">
+          klasp is the deterministic adjudicator your orchestrator polls. <code>klasp gate</code>
+          returns a versioned verdict — the same contract drives the agent surface, CI, plugins,
+          and autonomous runs.
+        </p>
+
+        <div class="builder-grid">
+          <div class="code-block">
+            <div class="code-header">
+              <span class="dots"><span></span><span></span><span></span></span>
+              <span class="file">klasp gate --format json</span>
+            </div>
+            <pre class="code-body"><span class="tok-key">$</span> klasp gate --format json
+<span class="tok-comment"># exit 0 = pass · exit 2 = fail (block) · stable, versioned</span>
+&#123;
+  <span class="tok-key">"output_schema_version"</span>: <span class="tok-bool">1</span>,
+  <span class="tok-key">"verdict"</span>: <span class="tok-str">"fail"</span>,
+  <span class="tok-key">"checks"</span>: [
+    &#123;
+      <span class="tok-key">"name"</span>: <span class="tok-str">"test"</span>,
+      <span class="tok-key">"verdict"</span>: <span class="tok-str">"fail"</span>,
+      <span class="tok-key">"findings"</span>: [
+        &#123;
+          <span class="tok-key">"severity"</span>: <span class="tok-str">"error"</span>,
+          <span class="tok-key">"file"</span>: <span class="tok-str">"src/lib.rs"</span>,
+          <span class="tok-key">"line"</span>: <span class="tok-bool">42</span>,
+          <span class="tok-key">"rule"</span>: <span class="tok-str">"test_total::charges_tax"</span>
+        &#125;
+      ]
+    &#125;
+  ]
+&#125;
+</pre>
+          </div>
+
+          <div class="builder-points">
+            <div class="builder-point">
+              <h4>Structured output</h4>
+              <p>
+                JSON, plus <code>--format junit</code> and <code>--format sarif</code> — land agent
+                verdicts in CI summaries and GitHub code-scanning.
+                <a href="https://github.com/klasp-dev/klasp/blob/main/docs/output-schema.md">Schema →</a>
+              </p>
+            </div>
+            <div class="builder-point">
+              <h4>Subprocess plugin protocol</h4>
+              <p>
+                JSON over stdin/stdout, <code>--describe</code> / <code>--gate</code>. Add a custom
+                check or surface and klasp runs it.
+                <a href="https://github.com/klasp-dev/klasp/blob/main/docs/plugin-protocol.md">v0 protocol →</a>
+              </p>
+            </div>
+            <div class="builder-point">
+              <h4>Orchestrator-ready <span class="ver-pill">v0.5.0</span></h4>
+              <p>
+                The <code>klasp-plugin-agentic-flow</code> reference gates push on
+                <code>.agentic-flow/</code> step receipts — resume from the earliest stale step.
+                <a href="https://github.com/klasp-dev/klasp/tree/main/examples/klasp-plugin-agentic-flow">Reference plugin →</a>
+              </p>
+            </div>
+            <div class="builder-point">
+              <h4>Parallel &amp; fail-open</h4>
+              <p>
+                rayon work-stealing across checks; infra errors degrade to <em>warn</em>, never a
+                spurious block. Protocol is experimental v0 — pin the schema, detect drift.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="section">
       <div class="container">
         <p class="section-label">Agents</p>
@@ -350,9 +450,11 @@ import Layout from "../layouts/Layout.astro";
         <p class="matrix-note">
           Cursor's hook surface is still beta as of Cursor 3.3 with open
           correctness bugs — deferred to v0.3.x or v1.0. Need a different
-          agent? Ship a plugin: see the
-          <a href="https://github.com/klasp-dev/klasp/tree/main/examples/klasp-plugin-pre-commit">reference plugin</a>
-          and the
+          agent? Ship a plugin: two reference plugins now —
+          <a href="https://github.com/klasp-dev/klasp/tree/main/examples/klasp-plugin-pre-commit">pre-commit</a>
+          and
+          <a href="https://github.com/klasp-dev/klasp/tree/main/examples/klasp-plugin-agentic-flow">agentic-flow</a> —
+          plus the
           <a href="https://github.com/klasp-dev/klasp/blob/main/docs/plugin-protocol.md">v0 protocol spec</a>.
         </p>
       </div>
@@ -362,11 +464,11 @@ import Layout from "../layouts/Layout.astro";
   <!-- ── 5. FOOTER ─────────────────────────────────────── -->
   <footer class="footer">
     <div class="container footer-row">
-      <span>klasp · v0.4.0 · Apache-2.0</span>
+      <span>klasp · v0.5.0 · Apache-2.0</span>
       <ul class="footer-links">
         <li><a href="https://github.com/klasp-dev/klasp">GitHub</a></li>
         <li><a href="https://github.com/klasp-dev/klasp/blob/main/docs/setup.md">Docs</a></li>
-        <li><a href="https://github.com/klasp-dev/klasp/releases/tag/v0.4.0">v0.4.0 release</a></li>
+        <li><a href="https://github.com/klasp-dev/klasp/releases/tag/v0.5.0">v0.5.0 release</a></li>
         <li><a href="https://github.com/klasp-dev/klasp/issues">Issues</a></li>
         <li><a href="https://github.com/klasp-dev/klasp/blob/main/LICENSE">License</a></li>
       </ul>
@@ -493,4 +595,56 @@ document.addEventListener("DOMContentLoaded", () => {
   run();
   document.getElementById("replayBtn")?.addEventListener("click", run);
 });
+</script>
+
+<script>
+// ── Bold motion: scroll-reveal + copy-to-clipboard ──────────────
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+// Copy-to-clipboard on the hero install snippet.
+document.querySelectorAll<HTMLElement>(".install-snippet[data-copy]").forEach((el) => {
+  el.addEventListener("click", async () => {
+    const text = el.dataset.copy ?? "";
+    try {
+      await navigator.clipboard.writeText(text);
+      const hint = el.querySelector(".copy-hint");
+      if (hint) {
+        const prev = hint.textContent;
+        hint.textContent = "copied ✓";
+        el.classList.add("copied");
+        setTimeout(() => {
+          hint.textContent = prev;
+          el.classList.remove("copied");
+        }, 1600);
+      }
+    } catch {
+      /* clipboard unavailable — no-op */
+    }
+  });
+});
+
+// Scroll-reveal — only when motion is allowed and the API exists, so no-JS and
+// reduced-motion users always see fully-rendered content (no hidden state).
+if (!reduceMotion && "IntersectionObserver" in window) {
+  document.body.classList.add("anim-ready");
+  const targets = document.querySelectorAll(
+    ".hero .h1, .hero .lede, .hero .sub-lede, .hero .cta-row, .section-title, .section-sub, .trust-card, .builder-point, .builder-section .code-block, .why-card, .install-card, .setup-callout, .usecase-grid, .usecase-why .item, .matrix, .matrix-note, .code-block, .demo-grid, .demo-controls",
+  );
+  const io = new IntersectionObserver(
+    (entries, obs) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          (entry.target as HTMLElement).classList.add("is-visible");
+          obs.unobserve(entry.target);
+        }
+      });
+    },
+    { rootMargin: "0px 0px -8% 0px", threshold: 0.08 },
+  );
+  targets.forEach((t, i) => {
+    t.classList.add("reveal-on-scroll");
+    (t as HTMLElement).style.transitionDelay = `${Math.min(i % 6, 5) * 50}ms`;
+    io.observe(t);
+  });
+}
 </script>
