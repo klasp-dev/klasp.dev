@@ -1,0 +1,18 @@
+# klasp.toml — klasp.dev's own dogfood config.
+# "klasp gates klasp.dev": an AI agent editing this site cannot commit a change
+# that breaks the Astro build. Verify this install:  klasp doctor
+version = 1
+
+[gate]
+agents = ["claude_code"]
+policy = "any_fail"
+
+# A broken build is the only way to ship a broken landing page, so gate it on
+# every commit attempt. `pnpm build` runs in a few seconds for this static site.
+[[checks]]
+name = "astro-build"
+triggers = [{ on = ["commit", "push"] }]
+timeout_secs = 120
+[checks.source]
+type = "shell"
+command = "pnpm build"
