@@ -1,10 +1,38 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import surfaces from "../data/surfaces.json";
+
+// Single source of truth for the version number and capability matrix:
+// src/data/surfaces.json, synced from the klasp repo's docs/surfaces.json via
+// `node scripts/sync-surfaces.mjs`. Release-specific taglines stay editorial;
+// the version NUMBER and the matrix cells are data-driven so they can't drift.
+const KLASP_VERSION = surfaces.version;
+
+const SHOWN = ["Claude Code", "Codex CLI", "Aider", "Cursor"];
+const isYes = (name, cap) => {
+  const s = surfaces.surfaces.find((x) => x.name === name);
+  return (s?.cells?.[cap] ?? "—").startsWith("✓");
+};
+// Each row maps a display label to a canonical capability so every ✓ traces to
+// surfaces.json. "Managed config" is site-only presentation.
+const MANAGED_CONFIG = {
+  "Claude Code": ".claude/settings.json",
+  "Codex CLI": "AGENTS.md",
+  Aider: ".aider.conf.yml",
+  Cursor: null,
+};
+const CAP_ROWS = [
+  { label: "Pre-commit gate", cap: "Commit gate" },
+  { label: "Push gate", cap: "Push gate" },
+  { label: "Idempotent install / uninstall", cap: "Install" },
+  { label: "Conflict detection", cap: "Conflict handling" },
+  { label: "Captured-session test", cap: "Captured-session test" },
+];
 ---
 
 <Layout
   title="klasp — block AI agents on the same gates as your humans"
-  description="klasp gates AI coding agents locally on your existing quality checks — before the agent's loop closes. v0.5.0: zero-setup klasp demo, hook-conflict detection, and a subprocess plugin protocol."
+  description={`klasp gates AI coding agents locally on your existing quality checks — before the agent's loop closes. v${KLASP_VERSION}: zero-setup klasp demo, hook-conflict detection, and a subprocess plugin protocol.`}
 >
   <header class="nav">
     <div class="container nav-row">
@@ -21,8 +49,8 @@ import Layout from "../layouts/Layout.astro";
     <!-- ── 1. HERO ─────────────────────────────────────── -->
     <section class="hero">
       <div class="container">
-        <a class="eyebrow" href="https://github.com/klasp-dev/klasp/releases/tag/v0.5.0"
-          ><span class="dot"></span>v0.5.0 — demo · conflict-aware · plugins</a
+        <a class="eyebrow" href={`https://github.com/klasp-dev/klasp/releases/tag/v${KLASP_VERSION}`}
+          ><span class="dot"></span>v{KLASP_VERSION} — demo · conflict-aware · plugins</a
         >
         <h1 class="h1">
           AI agents commit broken code.
@@ -101,7 +129,7 @@ import Layout from "../layouts/Layout.astro";
           <div class="trust-card">
             <h4><span class="tick">✓</span> Won't clobber your hooks</h4>
             <p>
-              v0.5.0 fingerprints husky, lefthook, and pre-commit and skips with a warning
+              v{KLASP_VERSION} fingerprints husky, lefthook, and pre-commit and skips with a warning
               instead of overwriting. <code>klasp init --adopt</code> mirrors what you already
               run.
             </p>
@@ -369,7 +397,7 @@ import Layout from "../layouts/Layout.astro";
               </p>
             </div>
             <div class="builder-point">
-              <h4>Orchestrator-ready <span class="ver-pill">v0.5.0</span></h4>
+              <h4>Orchestrator-ready <span class="ver-pill">v{KLASP_VERSION}</span></h4>
               <p>
                 The <code>klasp-plugin-agentic-flow</code> reference gates push on
                 <code>.agentic-flow/</code> step receipts — resume from the earliest stale step.
@@ -396,55 +424,44 @@ import Layout from "../layouts/Layout.astro";
           <thead>
             <tr>
               <th class="feature">Capability</th>
-              <th>Claude Code</th>
-              <th>Codex CLI</th>
-              <th>Aider</th>
-              <th>Cursor</th>
+              {SHOWN.map((s) => <th>{s}</th>)}
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td class="feature">Pre-commit gate</td>
-              <td class="yes">✓</td>
-              <td class="yes">✓</td>
-              <td class="yes">✓</td>
-              <td class="pending">—</td>
-            </tr>
-            <tr>
-              <td class="feature">Push gate</td>
-              <td class="yes">✓</td>
-              <td class="yes">✓</td>
-              <td class="pending">—</td>
-              <td class="pending">—</td>
-            </tr>
+            {CAP_ROWS.slice(0, 2).map((r) => (
+              <tr>
+                <td class="feature">{r.label}</td>
+                {SHOWN.map((s) =>
+                  isYes(s, r.cap) ? (
+                    <td class="yes">✓</td>
+                  ) : (
+                    <td class="pending">—</td>
+                  ),
+                )}
+              </tr>
+            ))}
             <tr>
               <td class="feature">Managed config</td>
-              <td><code>.claude/settings.json</code></td>
-              <td><code>AGENTS.md</code></td>
-              <td><code>.aider.conf.yml</code></td>
-              <td class="pending">—</td>
+              {SHOWN.map((s) =>
+                MANAGED_CONFIG[s] ? (
+                  <td><code>{MANAGED_CONFIG[s]}</code></td>
+                ) : (
+                  <td class="pending">—</td>
+                ),
+              )}
             </tr>
-            <tr>
-              <td class="feature">Idempotent install / uninstall</td>
-              <td class="yes">✓</td>
-              <td class="yes">✓</td>
-              <td class="yes">✓</td>
-              <td class="pending">—</td>
-            </tr>
-            <tr>
-              <td class="feature">Conflict detection</td>
-              <td class="yes">✓</td>
-              <td class="yes">✓</td>
-              <td class="pending">—</td>
-              <td class="pending">—</td>
-            </tr>
-            <tr>
-              <td class="feature">Captured-session test</td>
-              <td class="yes">✓</td>
-              <td class="yes">✓</td>
-              <td class="yes">✓</td>
-              <td class="pending">—</td>
-            </tr>
+            {CAP_ROWS.slice(2).map((r) => (
+              <tr>
+                <td class="feature">{r.label}</td>
+                {SHOWN.map((s) =>
+                  isYes(s, r.cap) ? (
+                    <td class="yes">✓</td>
+                  ) : (
+                    <td class="pending">—</td>
+                  ),
+                )}
+              </tr>
+            ))}
           </tbody>
         </table>
         <p class="matrix-note">
@@ -464,11 +481,11 @@ import Layout from "../layouts/Layout.astro";
   <!-- ── 5. FOOTER ─────────────────────────────────────── -->
   <footer class="footer">
     <div class="container footer-row">
-      <span>klasp · v0.5.0 · Apache-2.0</span>
+      <span>klasp · v{KLASP_VERSION} · Apache-2.0</span>
       <ul class="footer-links">
         <li><a href="https://github.com/klasp-dev/klasp">GitHub</a></li>
         <li><a href="https://github.com/klasp-dev/klasp/blob/main/docs/setup.md">Docs</a></li>
-        <li><a href="https://github.com/klasp-dev/klasp/releases/tag/v0.5.0">v0.5.0 release</a></li>
+        <li><a href={`https://github.com/klasp-dev/klasp/releases/tag/v${KLASP_VERSION}`}>v{KLASP_VERSION} release</a></li>
         <li><a href="https://github.com/klasp-dev/klasp/issues">Issues</a></li>
         <li><a href="https://github.com/klasp-dev/klasp/blob/main/LICENSE">License</a></li>
       </ul>
